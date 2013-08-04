@@ -1,0 +1,22 @@
+{% extends "spoj.html" %}
+
+{% block maindiv %}
+
+<div style="padding:15px;">
+    <h2>Settings</h2>
+    <form action="" method="POST">{% csrf_token %}
+        <table>
+        {% for field in form %}
+            <tr><td width="70%" style="padding:7px;">{{field.label}}:</td><td> {{field}} </td></tr>
+        {% endfor %}
+        </table>
+<!--         {{ formset.management_form }}<br>
+        {% for form in formset %}
+            <h3>{{form.instance.group.name}}</h3>
+            {{form}} <br>
+        {% endfor %} -->
+        <br>
+        <a href="#" onclick="parentNode.submit();" class="button pill icon edit"/>Update</a>
+    </form>
+</div>
+{% endblock %}

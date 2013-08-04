@@ -1,0 +1,185 @@
+{% extends "spoj.html" %}
+{% load gravatar %}
+{% block maindiv %}
+
+{% block extrahead %}
+<script type="text/javascript">
+function leaveGroup(){
+    if(confirm("Are you sure you want to leave this group?")){
+        $.ajax({ 
+            data: {'id': {{group.id}} },
+            type: "POST", 
+            url: '/leave_group/', 
+            success: function(response) { 
+                if(response['status'] == "OK"){
+                    window.location.href = "/spoj";
+                }
+            },
+            dataType: "json",
+        });
+    }
+    return false;
+}
+
+function suggestProblem(){
+    if($("#prob-suggest").is(":visible")){
+        var prob = $.trim($("#prob-suggest").val());
+        if (prob.length != 0){
+            $.ajax({ 
+                data: {'id': {{group.id}}, 'problem': prob },
+                type: "GET", 
+                url: '/suggest_problem/',
+                success: function(response) { 
+                    if(response['status'] == "OK"){
+                        $("#prob-suggest").hide();
+                        $("#small-notification").fadeIn();
+                        setTimeout(function(){
+                            $("#small-notification").fadeOut();
+                        }, 2000)
+                    }
+                },
+                dataType: "json",
+            });
+        } else {
+            $("#prob-suggest").fadeOut();
+        }
+    } else {
+        $("#prob-suggest").fadeIn();
+    }
+    return false;
+    
+}
+
+$(document).ready(function(){
+    $("#prob-suggest").keyup(function(event){
+        if(event.keyCode == 13){
+            suggestProblem();
+        }
+    });
+});
+
+</script>
+{% endblock %}
+
+
+<div style="padding:15px;">
+    <h3>{{group.name}}
+        {% if is_owner %} 
+            <span style="float:right;">
+                <a href="/group/{{group.id}}/members">Group Settings </a>
+            </span>
+        {% endif %}    
+    </h3>
+    <hr>
+    <div>
+        <ul class="group-description">
+            <li>
+                <div class="display-pic leaderboard-cell">
+                    &nbsp;
+                </div>
+                <div class="display-name leaderboard-cell">
+                    Name
+                </div>
+                <div class="problems-solved leaderboard-cell">
+                    Solved
+                </div>
+                <div class="points leaderboard-cell">
+                    Points
+                </div>
+                <div class="world-ranking leaderboard-cell">
+                    Rank
+                </div>
+                <div class="ppp leaderboard-cell">
+                    Pts/Prob*
+                </div>
+                <div class="clear"></div>
+            </li>
+
+            {% for member in group_members %}
+
+                <li>
+                    <div class="display-pic leaderboard-cell">
+                        <img src="{% gravatar_url member.user.email 40 %}"/> 
+                    </div>
+                    <div class="display-name leaderboard-cell">
+                        {% if member.user.first_name %}
+                            {{member.user.first_name}} {{member.user.last_name}} 
+                        {% else %}
+                            {{member.user_email}}
+                        {% endif %}
+                        <br><br>
+                        <span style="font-family:Open Sans;font-size:12px;color:#00628B;">
+                            <a href="http://www.spoj.com/users/{{member.user.spojuser.spoj_handle}}/" target="_blank">{{member.user.spojuser.spoj_handle}}</a>
+                        </span>
+                    </div>
+                    <div class="problems-solved leaderboard-cell">
+                        {{member.user.spojuser.problems_solved}}
+                    </div>
+                    <div class="points leaderboard-cell">
+                        {{member.user.spojuser.points}}
+                    </div>
+                    <div class="world-ranking leaderboard-cell">
+                        {% if member.user.spojuser.rank == 10000000 %}
+                            NA
+                        {% else %}
+                            {{member.user.spojuser.rank}}
+                        {% endif %}
+                    </div>
+                    <div class="world-ranking leaderboard-cell">
+                        {{member.user.spojuser.ppp}}
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            {% endfor %}
+        </ul>
+        <br>
+        
+        <div style="text-align:right">
+            <input type="text" placeholder="Problem Code" id="prob-suggest" style="display:none;height:15px;"/> <span id="small-notification" style="display:none;" class="problem solved">Problem Suggested!</span>
+            &nbsp;<a href="#" onclick="return suggestProblem();" class="button pill icon rss" />Suggest Problem</a>
+            {% if not is_owner %} 
+                <a href="#" onclick="return leaveGroup();" class="button pill icon trash danger" />Leave Group</a>
+            {% else %}
+                <a href="/group/{{group.id}}/members" class="button icon add pill">Add Members</a><br>
+            {% endif %}
+        </div>
+        <br>        
+        
+        <div class="ppp-note">
+            *Higher value of Pts/Prob indicates that the user may have solved tougher problems(Solved by less people)
+        </div>
+    </div>
+
+    <br><br>
+    <h3>Feed</h3>
+    <hr>
+    <br>
+        {% for story in feed %}
+            <div class="feed">
+                <div class="feed-dp">
+                    <img style="float:left;" src="{% gravatar_url story.user.email 48 %}"/> 
+                </div>
+                <div class="feed-desc">
+                    {{story.user.first_name}} solved the problem{% if story.count > 1 %}s{% endif %}
+                    <div style="font-size:11px;padding-top:6px;padding-bottom:10px;color:#999;font-family:Open Sans;">
+                        {{story.duration}}
+                    </div>
+                </div>
+                <div class="problem-wrapper">
+                    {% for submission in story.submissions %} 
+                        <div class="problem solved">
+                            <a href="http://www.spoj.com/problems/{{submission.problem}}/" style="color:#468847;" target="_blank">
+                                {{submission.problem}}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="clear"></div>
+            </div>
+            <br>
+            <hr class="feed-separator">
+        {% endfor %}    
+    <br>
+
+</div>
+{% endblock %}

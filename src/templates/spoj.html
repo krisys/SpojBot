@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load gravatar %}
+{% block content %}
+    <div style="float:left;width:200px;margin-right:10px;">
+        {% block sidebar %}
+            <div style="align:center;padding:10px;">
+                <img src="{% gravatar_url request.user.email 140 %}"/>
+                <br>
+                <a style="font-family:Open Sans;font-size:11px;" href="https://en.gravatar.com/" target="_blank">Change picture (Gravatar)</a>
+            </div>
+            <div style="font-family:Open Sans;font-size:13px;padding-left:10px;line-height:22px;">
+                <div style="font-weight:bold;color:#000;font-size:16px;">{{request.user.first_name}} {{request.user.last_name}} </div>
+                World Rank: 
+                {%if request.user.spojuser.rank == 10000000 %}
+                    <a href="/settings">Set spoj handle</a>
+                {% else %}
+                    {{request.user.spojuser.rank}}
+                {% endif %}
+                <br>
+
+                {{request.user.email}} <br>
+                <br>
+
+                <iframe src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fspojbot%2F&amp;send=false&amp;layout=standard&amp;width=150&amp;show_faces=false&amp;font=lucida+grande&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=151745491601058" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:180px; height:45px;" allowTransparency="true"></iframe>
+
+                <a href="/spoj">Home</a><br>
+                Groups<br>
+                {% for group in my_groups %}
+                    <div class="sidebar-group" >
+                        <a href="/group/{{group.id}}"> » {{group.name}}</a>
+                        <!-- <a href="/group/discussions/{{group.id}}/" style="float:right;"><img width="13px" style="padding-top:2px;" src="{{STATIC_URL}}images/discussion.png"/></a> -->
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+                <form method="POST" action="/group/create"> {% csrf_token %}
+                    <input type="text" name="group" placeholder="Enter a name & press &crarr;"/>
+                </form>
+                <a href="/settings">Settings</a><br>
+                <a href="/logout">Logout</a>
+            </div>
+        {% endblock %}
+    </div>
+
+    <div style="float:left;border-left:1px solid #eee;min-height:300px;width:500px;margin-left:10px;">
+        {% block maindiv %}
+        <div style="padding:15px;">
+            {% if todo %}
+                <h3>Todo</h3>
+                <br>
+
+                <div class="feed">
+                    <div class="feed-dp">
+                        <img style="float:left;" src="{% gravatar_url request.user.email 48 %}"/> 
+                    </div>
+                    <div class="feed-desc">
+                        {{request.user.first_name}} 
+                    </div>
+                    <div class="problem-wrapper">
+                        {% for problem in todo %} 
+                            <div class="problem pending">
+                                <a href="http://www.spoj.com/problems/{{problem.problem}}/" style="color: #C09853;" target="_blank">
+                                    {{problem.problem}}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="clear"></div>
+                </div>
+                <br>
+                <hr class="feed-separator">
+
+                <br>
+            {% endif %}
+
+            {% for story in friend_suggestions %}
+                <div class="feed">
+                    <div class="feed-dp">
+                        <img style="float:left;" src="{% gravatar_url story.user.email 48 %}"/> 
+                    </div>
+                    <div class="feed-desc">
+                        {{story.user.first_name}} suggested the problem
+                        <div style="font-size:11px;padding-top:6px;padding-bottom:10px;color:#999;font-family:Open Sans;">
+                            {{story.timestamp|naturaltime}}
+                        </div>
+                    </div>
+                    <div class="problem-wrapper">
+                        <div class="problem pending">
+                            <a href="http://www.spoj.com/problems/{{story.problem}}/" style="color: #C09853;" target="_blank">
+                                {{story.problem}}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="clear"></div>
+                </div>
+                <br>
+                <hr class="feed-separator">
+                <br>
+            {% endfor %}
+
+            <h3>Feed</h3>
+            <br>
+            {% for story in feed %}
+                <div class="feed">
+                    <div class="feed-dp">
+                        <img style="float:left;" src="{% gravatar_url story.user.email 48 %}"/> 
+                    </div>
+                    <div class="feed-desc">
+                        {{story.user.first_name}} solved the problem{% if story.count > 1 %}s{% endif %}
+                        <div style="font-size:11px;padding-top:6px;padding-bottom:10px;color:#999;font-family:Open Sans;">
+                            {{story.duration}}
+                        </div>
+                    </div>
+                    <div class="problem-wrapper">
+                        {% for submission in story.submissions %} 
+                            <div class="problem solved">
+                                <a href="http://www.spoj.com/problems/{{submission.problem}}/" style="color:#468847;" target="_blank">
+                                    {{submission.problem}}
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="clear"></div>
+                </div>
+                <br>
+                <hr class="feed-separator">
+                <br>
+            {% empty %}
+                Set your spoj handle in <a href="/settings">Settings</a>, Create a group and invite some Friends.
+            {% endfor %}
+        </div>
+        {% endblock %}
+    </div>
+    <div class="clear"></div>
+{% endblock %}

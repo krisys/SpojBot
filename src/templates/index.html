@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div style="font-size:30px;font-weight:bold;letter-spacing:0.06em;color:#000;line-height:1.8em;text-align:center;">
+        Bringing a social angle to problem solving
+    </div>
+    <div style="font-size:15px;color:#000;line-height:1.1em;text-align:center;color:#666;">SpojBot emails one problem to all members of the group everyday. </div>
+    <br>
+    <div style="line-height:1.3em;text-align:center;">
+        <a href="/login/google/"><img src="{{STATIC_URL}}images/home.png" width="700px" style="border:1px solid #eee;"/></a>
+    </div>
+    <br><br>
+    <div style="font-family:Open Sans;font-size:13px;line-height:1.3em;text-align:center;">
+        <a href="/login/google/"><img src="{{STATIC_URL}}images/google-sign-in.png"/></a>
+    </div>
+    <br>
+    <br>
+    <div style="text-align:center;">
+        <iframe align="middle" src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fspojbot%2F&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=false&amp;font=lucida+grande&amp;colorscheme=light&amp;action=like&amp;height=35&amp;appId=151745491601058" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:230px; height:35px;" allowTransparency="true"></iframe>
+    </div>
+{% endblock %}

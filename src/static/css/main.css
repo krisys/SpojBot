@@ -1,0 +1,213 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; vertical-align: baseline; }
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+body { line-height: 1; }
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+
+.header, .header a{
+  font-family:'Andada';
+  font-weight:700;
+  letter-spacing: 1px;
+  padding-top:30px;
+  color:#00628B;
+  padding-bottom: 10px;
+  font-size:50px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.content{
+  padding:25px;
+  text-align:justify;
+  font-family: 'Andada';
+  background-color: white;
+  margin-top: 20px;
+  border:1px solid #ddd;
+}
+
+body{
+  color:#555;
+  font-size: 16px;
+  background-color: #fafafa;
+}
+
+h1{
+  font-size: 30px;
+  color:#000;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+h2{
+  font-size: 24px;
+  color:#000;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+h3{
+  font-size: 18px;
+  font-weight:bold;
+  color:#000;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+
+p{
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+a{
+  text-decoration: none;
+  color:#00628B;
+}
+
+.summary{
+  font-size:14px;
+  padding-left: 20px;
+}
+
+input{
+   border:1px solid #ddd;
+   padding:5px;
+   font-family: Open Sans;
+   border-radius: 5px;
+}
+
+.email-invite input[type="text"]{
+  width:300px;
+  margin-left:5px;
+}
+
+ul.group-description > li{
+  padding-bottom:10px;
+  padding-top:10px;
+  font-size: 13px;
+  border-bottom:1px solid #ddd;
+}
+
+.leaderboard-cell{
+  float:left;
+  padding:5px;
+}
+
+.display-pic{
+  min-width:40px;
+}
+
+.display-name{
+  width:200px;
+}
+
+.problems-solved{
+  width:40px;
+}
+
+.world-ranking{
+  width:40px;
+}
+
+.points{
+  width:40px;
+}
+
+.ppp{
+  width:40px;
+}
+
+.ppp-note{
+  font-family: 'Open sans';
+  font-size: 12px;
+  line-height: 20px;
+  padding:5px;
+  border:1px solid #F9E8A5;
+  
+  border-radius: 5px;
+  background-color: #FBF1C9;
+  color:#C09853;
+}
+
+.note{
+  font-family:'Andada';
+  text-align: center;
+}
+
+.problem{
+  padding:3px;
+  margin-bottom: 5px;
+  display:inline-block;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: 'Open Sans';
+}
+
+.solved{
+  border:1px solid #D6E9C6;
+  background-color: #DFF0D8;
+  color:#468847;
+}
+
+.pending{
+  color: #C09853;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background-color: #FCF8E3;
+  border: 1px solid #C09853;;
+}
+
+.feed-separator{
+  border:0px;
+  border-bottom: 1px solid #ddd;
+}
+
+.feed-dp{
+  padding-left:10px;
+}
+
+.feed-desc{
+  color:#000;
+  padding-left: 10px;
+  float:left;
+}
+
+.problem-wrapper{
+  float:left;
+  width:380px;
+  text-align:justify;
+  margin-left: 68px;
+}
+
+.footer{
+  font-size: 13px;
+  font-family: 'Open Sans';
+  text-align: center;
+  margin:20px;
+}
+
+.prob-notification input[type="text"]{
+  width:30px;
+  text-align: center;
+}
+
+.sidebar-group{
+  padding:3px;  
+  margin-bottom:2px;
+}
+
+#prob-suggest{
+  width:100px;
+  text-transform: uppercase;
+}

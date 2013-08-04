@@ -1,0 +1,80 @@
+{% extends "spoj.html" %}
+{% load gravatar %}
+
+{% block extrahead %}
+<script type="text/javascript">
+function deleteGroup(){
+    if(confirm("Are you sure you want to delete this group?")){
+        $.ajax({ 
+            data: {'id': {{group.id}} },
+            type: "POST", 
+            url: '/delete_group/', 
+            success: function(response) { 
+                if(response['status'] == "OK"){
+                    window.location.href = "/spoj";
+                }
+            }, 
+            dataType: "json",
+        });
+    }
+}
+
+</script>
+{% endblock %}
+
+{% block maindiv %}
+<div style="padding:15px;">
+    <form method="post" id="settingsform">{% csrf_token %}
+        <h2>{{group.name}} - Settings</h2>
+        <br>
+        <div>
+            {{form.name.label}} : {{form.name}}
+            <a href="#" onclick="document.getElementById('settingsform').submit();" style="float:right;" class="button icon edit pill"/>Save</a>
+            <div class="clear"></div>
+        </div>            
+        <div>
+            <br>
+            <br>
+            <h4>Members</h4>
+            <br>
+            <ul class="group-description">
+                {% for member in group_members %}
+                    <li>
+                        <div class="display-pic leaderboard-cell">
+                            <img src="{% gravatar_url member.user_email 32 %}"/> 
+                        </div>
+                        <div class="leaderboard-cell">
+                            {{member.user_email}}
+                            {% if member.user.first_name %}
+                                - {{member.user.first_name}}
+                            {% endif %}
+                            <br><br><span style="font-family:Open Sans;font-size:12px;color:#00628B;">{{member.user.spojuser.spoj_handle}}</span>
+                        </div>
+                        <div style="float:right;">
+                            {% if member.user != current_user.user %}
+                                <a href="/delete_member/{{member.id}}/" class="button pill icon trash">Remove</a>
+                            {% endif %}
+                        </div>
+                        <div class="clear"></div>
+                    </li>
+                {% endfor %}
+
+            </ul>
+            <br>
+            <div class="email-invite">
+                <input type="text" name="email" placeholder="Enter friends Email"/>
+                <a href="#" onclick="document.getElementById('settingsform').submit();" class="button icon pill user" style="float:right;"/>Invite Friend</a>
+                <div class="clear"></div>
+            </div>
+            <br>
+            <br>
+            <h4>Delete Group
+            <a href="#" onclick="deleteGroup();" class="button pill icon trash danger" style="float:right;" />Delete</a>
+            <div class="clear"></div>
+            </h4>
+            <br>
+
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "spoj.html" %}
+
+{% block maindiv %}
+
+<div style="padding:15px;">
+    <h2>Delete member - {{member.group.name}}</h2>
+    <form action="" method="POST">{% csrf_token %}
+        Are you sure you want to delete the following user from {{member.group.name}} <br><br> {{member.user_email}}? <br><br>
+        <input type="hidden" name="member" value="{{member.id}}"/>
+        <a href="#" onclick="parentNode.submit();" class="button icon trash pill danger">Yes</a> 
+        <a href="/group/{{group.id}}/members" class="button icon arrowleft pill"> No</a>
+    </form>
+</div>
+{% endblock %}

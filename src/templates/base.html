@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+      <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+      <link href="http://fonts.googleapis.com/css?family=Andada&subset=latin" rel="stylesheet" type="text/css">
+      <link href="http://fonts.googleapis.com/css?family=Open Sans&subset=latin" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="{{STATIC_URL}}css/grid.css" type="text/css" charset="utf-8" />
+      <link rel="stylesheet" href="{{STATIC_URL}}css/main.css" type="text/css" charset="utf-8" />
+      <link rel="stylesheet" href="{{STATIC_URL}}css/gh-buttons.css" type="text/css" charset="utf-8" />
+      <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+      
+      <title>{% block title %}SpojBot{% endblock %}</title>
+
+      {% if "spojbot" in request.META.HTTP_HOST %}
+      <!-- start Mixpanel --><script type="text/javascript">(function(c,a){window.mixpanel=a;var b,d,h,e;b=c.createElement("script");b.type="text/javascript";b.async=!0;b.src=("https:"===c.location.protocol?"https:":"http:")+'//cdn.mxpnl.com/libs/mixpanel-2.1.min.js';d=c.getElementsByTagName("script")[0];d.parentNode.insertBefore(b,d);a._i=[];a.init=function(b,c,f){function d(a,b){var c=b.split(".");2==c.length&&(a=a[c[0]],b=c[1]);a[b]=function(){a.push([b].concat(Array.prototype.slice.call(arguments,0)))}}var g=a;"undefined"!==typeof f?
+      g=a[f]=[]:f="mixpanel";g.people=g.people||[];h="disable track track_pageview track_links track_forms register register_once unregister identify name_tag set_config people.identify people.set people.increment".split(" ");for(e=0;e<h.length;e++)d(g,h[e]);a._i.push([b,c,f])};a.__SV=1.1})(document,window.mixpanel||[]);
+      mixpanel.init("1d85a277d2f64ae0f5f0f3dea88c9f02");</script><!-- end Mixpanel -->
+        {% if request.user.is_authenticated %}
+          <script type="text/javascript">
+          $(document).ready(function(){
+            mixpanel.people.identify('{{request.user.id}}');
+            mixpanel.people.set({
+                "$email": "{{request.user.email}}",    // only special properties need the $
+                "$created": "{{request.user.date_joined}}",
+                "$last_login": new Date(),         // properties can be dates...
+                "$name": "{{request.user.username}} {{request.user.get_full_name}}",
+            });
+            mixpanel.identify('{{request.user.id}}');
+            mixpanel.name_tag('{{request.user.get_full_name}} {{request.user.email}}');
+          });
+          </script>
+        {% endif %}
+
+        <script type="text/javascript">
+          {% if not request.user.is_superuser %}
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-39193454-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+              var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+              ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+              var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+          {% endif %}
+        </script>
+      {% endif %}
+
+      {% block extrahead %}
+      {% endblock %}
+  </head>
+  <body>
+    <div class="page-background">
+      <div class="container_12">
+        <div class="grid_12">
+          <div class="header">
+            <a href="/spoj"><img src="{{STATIC_URL}}images/spojbot.png" width="70" style="padding-top:10px;"/>SpojBot</a>
+          </div>
+          <div class="note">
+            Solve problems with your friends, one per day!
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+      </div>
+      <div class="container_12">
+        <div class="grid_1">
+          &nbsp;
+        </div>
+        <div class="grid_10">
+          <div class="content">
+            {% block content %}
+            
+
+            {% endblock %}
+          </div>
+        </div>
+        <div class="grid_1">
+        </div>
+        <div class="clear"></div>
+      </div>
+
+      <div class="footer">SpojBot uses data from <a href="http://www.spoj.com" target="_blank">Spoj.com</a> and does not claim any ownership of problems listed. </div>
+  </body>
+</html>
+
+
