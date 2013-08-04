@@ -44,11 +44,14 @@ def format_feed(feed):
 def index(request, template_name='index.html'):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/spoj')
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+        context_instance=RequestContext(request))
 
 
 def update_jobs(request):
-    belongs_to = GroupMember.objects.filter(user_email=request.user.email, user=None)
+    belongs_to = GroupMember.objects.filter(user_email=request.user.email,
+        user=None)
+
     for group in belongs_to:
         group.user = request.user
         group.receive_emails = True
@@ -58,7 +61,8 @@ def update_jobs(request):
 
     if not belongs_to:
         group = CodeGroup.objects.create(name='My group', notifications=1)
-        GroupMember.objects.create(user_email=request.user.email, user=request.user, group=group, is_owner=True, receive_emails=True)
+        GroupMember.objects.create(user_email=request.user.email,
+            user=request.user, group=group, is_owner=True, receive_emails=True)
 
 
 @login_required
@@ -80,7 +84,8 @@ def spoj(request, template_name='spoj.html'):
     friend_suggestions = friend_suggestions.exclude(problem__in=solved_by_me)
     todo = suggested_problems.exclude(problem__in=solved_by_me)
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+        context_instance=RequestContext(request))
 
 
 @login_required
@@ -88,22 +93,21 @@ def config(request, template_name='settings.html'):
     user, created = SpojUser.objects.get_or_create(user=request.user)
 
     form = SpojUserForm(request.POST or None, instance=user)
-    # SettingsFormSet = modelformset_factory(GroupMember, fields=['receive_emails'], extra=0)
-    # formset = SettingsFormSet(request.POST or None, queryset=GroupMember.objects.filter(user=request.user))
-    # if formset.is_valid():
-    #     formset.save()
 
     if form.is_valid():
         form.save()
         user.fetch_spoj_data()
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+        context_instance=RequestContext(request))
 
 
 @login_required
 def create_group(request):
     group = CodeGroup.objects.create(name=request.POST['group'])
-    GroupMember.objects.create(user_email=request.user.email, user=request.user, group=group, is_owner=True, receive_emails=True)
+    GroupMember.objects.create(user_email=request.user.email,
+        user=request.user, group=group, is_owner=True, receive_emails=True)
+
     return HttpResponseRedirect("/group/%d/" % (group.id))
 
 
@@ -118,7 +122,9 @@ def user_belongs_to_group(user, group_members):
 def view_group(request, id, template_name="group.html"):
     try:
         group = CodeGroup.objects.get(id=id)
-        group_members = GroupMember.objects.filter(group=group).order_by('user__spojuser__rank')
+        group_members = GroupMember.objects.filter(group=group)
+        group_members = group_members.order_by('user__spojuser__rank')
+
         if request.user.is_superuser:
             pass
         elif not user_belongs_to_group(request.user, group_members):
@@ -133,12 +139,16 @@ def view_group(request, id, template_name="group.html"):
     for member in group_members:
         if member.is_owner and member.user == request.user:
             is_owner = True
+
         group_users.append(member.user)
 
-    feed = Submission.objects.filter(user__in=group_users).order_by('-timestamp')[:300]
+    feed = Submission.objects.filter(user__in=group_users).order_by(
+        '-timestamp')[:300]
+
     feed = format_feed(feed)
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+        context_instance=RequestContext(request))
 
 
 def get_or_none(model, **kwargs):
@@ -177,7 +187,8 @@ def view_group_members(request, id, template_name="group_members.html"):
             email = request.POST['email']
             if validateEmail(email):
                 user = get_or_none(User, email=email)
-                g = GroupMember.objects.create(user_email=email, user=user, group=group)
+                g = GroupMember.objects.create(user_email=email,
+                    user=user, group=group)
 
                 group_members = GroupMember.objects.filter(group=group)
                 if not user:
@@ -198,14 +209,16 @@ def view_group_members(request, id, template_name="group_members.html"):
     except:
         return HttpResponseRedirect("/")
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+        context_instance=RequestContext(request))
 
 
 @login_required
 def delete_member(request, id, template_name="delete_member.html"):
     member = GroupMember.objects.get(id=id)
     group = member.group
-    current_user = GroupMember.objects.get(user=request.user, group=group)
+    current_user = GroupMember.objects.get(user=request.user,
+        group=group)
 
     if not current_user.is_owner:
         return HttpResponseRedirect("/")
@@ -213,7 +226,8 @@ def delete_member(request, id, template_name="delete_member.html"):
         member.delete()
         return HttpResponseRedirect("/group/%d/" % group.id)
 
-    return render_to_response(template_name, locals(), context_instance=RequestContext(request))
+    return render_to_response(template_name, locals(),
+        context_instance=RequestContext(request))
 
 
 @login_required
@@ -260,14 +274,18 @@ def suggest_problem(request):
             problem = request.GET.get('problem')
             if '/' in problem:
                 return HttpResponse(json.dumps(response))
-            problem, created = SpojProblem.objects.get_or_create(problem=problem)
+
+            problem, created = SpojProblem.objects.get_or_create(
+                problem=problem)
+
             if not created:
                 problem.source = 'user_suggestion'
                 problem.save()
             try:
                 UserSuggestion.objects.get(group=group, problem=problem)
             except:
-                UserSuggestion.objects.get_or_create(group=group, problem=problem, user=request.user)
+                UserSuggestion.objects.get_or_create(group=group,
+                    problem=problem, user=request.user)
             response['status'] = 'OK'
             return HttpResponse(json.dumps(response))
     except:
